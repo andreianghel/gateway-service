@@ -1,0 +1,50 @@
+spring:
+  application:
+    name: zuul-gateway-service
+server:
+  port: 8080
+
+
+#if eureka or other service discovery service is present, route by id
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+    region: default
+    registryFetchIntervalSeconds: 5
+    registerWithEureka: true
+    fetchRegistry: true
+
+
+ribon:
+  eureka:
+    enabled: false
+
+
+
+zuul:
+  routes:
+    demo-service-name:
+      # example route by url
+      # this example will work if an service exists (demo-service-name) and runs on port 8090
+      url: http://localhost:8090
+      # routed calls will be called on this new path
+      path: /demo-service/***
+
+# example route by id
+      service-id: demo-service
+      #path: /demo-service/**
+      stripPrefix: true
+      sensitive-headers: Set-Cookie,Authorization
+
+
+
+
+
+
+
+#zuul.routes.demo-service-name.service-id=demo-service # this is the value registered with the service discovery service
+#zuul.routes.demo-service-name.path=/demo-service/**
+#zuul.routes.demo-service-name.stripPrefix=true
+#zuul.routes.demo-service-name.sensitive-headers=Set-Cookie,Authorization
